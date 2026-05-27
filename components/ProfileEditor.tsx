@@ -1,0 +1,241 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useAuthUser } from "../hooks/useAuthUser";
+import { getUserProfile, saveUserProfile } from "../services/userService";
+
+const roleOptions = [
+  "プログラマ",
+  "2Dグラフィック",
+  "3Dグラフィック",
+  "サウンド",
+  "企画",
+  "その他",
+];
+
+type ProfileEditorProps = {
+  onSaved?: () => void;
+};
+
+export default function ProfileEditor({ onSaved }: ProfileEditorProps) {
+  const { uid, email, photoURL } = useAuthUser();
+
+  const [name, setName] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [grade, setGrade] = useState("");
+
+  const [roles, setRoles] = useState<string[]>([]);
+  const [otherRole, setOtherRole] = useState("");
+
+  const [tools, setTools] = useState("");
+  const [bio, setBio] = useState("");
+  const [iconUrl, setIconUrl] = useState("");
+  const [portfolioUrls, setPortfolioUrls] = useState(["", "", ""]);
+
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!uid) return;
+
+      const data = await getUserProfile(uid);
+
+      if (data) {
+        setName(data.name ?? "");
+        setNickname(data.nickname ?? "");
+        setGrade(data.grade ?? "");
+        setRoles(data.roles ?? []);
+        setOtherRole(data.otherRole ?? "");
+        setTools(data.tools ?? "");
+        setBio(data.bio ?? "");
+        setIconUrl(data.iconUrl ?? photoURL ?? "");
+        setPortfolioUrls(data.portfolioUrls ?? ["", "", ""]);
+      } else {
+        setIconUrl(photoURL ?? "");
+      }
+    };
+
+    fetchProfile();
+  }, [uid, photoURL]);
+
+  const toggleRole = (role: string) => {
+    setRoles((current) =>
+      current.includes(role)
+        ? current.filter((item) => item !== role)
+        : [...current, role]
+    );
+  };
+
+  const saveProfile = async () => {
+    if (!uid) {
+      setMessage("ログインしてください。");
+      return;
+    }
+
+    await saveUserProfile({
+      uid,
+      email,
+      name,
+      nickname,
+      grade,
+      roles,
+      otherRole,
+      tools,
+      bio,
+      iconUrl,
+      portfolioUrls,
+    });
+
+    setMessage("プロフィールを保存しました！");
+    onSaved?.();
+  };
+
+  return (
+    <section className="rounded-3xl border bg-white p-6 shadow-sm">
+      <h2 className="mb-5 text-2xl font-black">プロフィール編集</h2>
+
+      <div className="mb-8 flex flex-col gap-5 rounded-3xl bg-slate-50 p-5 sm:flex-row sm:items-center">
+        <img
+          src={
+  iconUrl ||
+  photoURL ||
+  "https://placehold.jp/150x150.png"
+}
+          alt="プロフィールアイコン"
+          className="h-24 w-24 rounded-full border bg-white object-cover"
+        />
+
+        <div className="flex-1">
+          <label className="mb-1 block text-sm font-bold">アイコンURL</label>
+          <input
+            className="w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none focus:border-slate-400"
+            value={iconUrl}
+            onChange={(e) => setIconUrl(e.target.value)}
+            placeholder="Googleアイコンを使用、または画像URLを入力"
+          />
+          <p className="mt-2 text-xs text-slate-500">
+            未入力の場合はGoogleアカウントのアイコンを使用します。
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-5 md:grid-cols-2">
+        <div>
+          <label className="mb-1 block text-sm font-bold">名前</label>
+          <input
+            className="w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:border-slate-400"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="例：津川 柚香"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-bold">ニックネーム</label>
+          <input
+            className="w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:border-slate-400"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            placeholder="例：ゆず"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-bold">学年</label>
+          <select
+            className="w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:border-slate-400"
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+          >
+            <option value="">選択してください</option>
+            <option value="1年">1年</option>
+            <option value="2年">2年</option>
+            <option value="3年">3年</option>
+            <option value="4年">4年</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-bold">得意分野</label>
+          <div className="flex flex-wrap gap-2">
+            {roleOptions.map((role) => (
+              <button
+                key={role}
+                type="button"
+                onClick={() => toggleRole(role)}
+                className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+                  roles.includes(role)
+                    ? "bg-slate-950 text-white"
+                    : "border bg-white text-slate-700"
+                }`}
+              >
+                {role}
+              </button>
+            ))}
+          </div>
+
+          {roles.includes("その他") && (
+            <input
+              className="mt-3 w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:border-slate-400"
+              value={otherRole}
+              onChange={(e) => setOtherRole(e.target.value)}
+              placeholder="その他の得意分野を入力"
+            />
+          )}
+        </div>
+
+        <div className="md:col-span-2">
+          <label className="mb-1 block text-sm font-bold">使用ツール</label>
+          <input
+            className="w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:border-slate-400"
+            value={tools}
+            onChange={(e) => setTools(e.target.value)}
+            placeholder="例：Unity, Blender, Figma"
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label className="mb-1 block text-sm font-bold">ポートフォリオURL</label>
+          <div className="space-y-3">
+            {portfolioUrls.map((url, index) => (
+              <input
+                key={index}
+                className="w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:border-slate-400"
+                value={url}
+                onChange={(e) => {
+                  const updated = [...portfolioUrls];
+                  updated[index] = e.target.value;
+                  setPortfolioUrls(updated);
+                }}
+                placeholder={`ポートフォリオURL ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="md:col-span-2">
+          <label className="mb-1 block text-sm font-bold">一言・自己紹介</label>
+          <textarea
+            className="min-h-36 w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:border-slate-400"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            placeholder="制作したいジャンル、得意なこと、参加したい活動などを書いてください。"
+          />
+        </div>
+      </div>
+
+      <div className="mt-8 flex flex-wrap items-center gap-4">
+        <button
+          className="rounded-2xl bg-slate-950 px-6 py-3 font-bold text-white hover:bg-slate-800"
+          onClick={saveProfile}
+        >
+          保存する
+        </button>
+
+        {message && (
+          <p className="text-sm font-bold text-green-600">{message}</p>
+        )}
+      </div>
+    </section>
+  );
+}
