@@ -35,10 +35,10 @@ export default function MyPage() {
 
   return (
     <AuthGuard>
-      <main className="mx-auto max-w-6xl px-6 py-10">
+      <main className="mx-auto max-w-6xl px-6 py-10 text-slate-950">
         <div className="mb-8">
           <p className="mb-2 text-sm font-bold text-slate-500">My Page</p>
-          <h1 className="text-3xl font-black">マイページ</h1>
+          <h1 className="text-3xl font-bold text-slate-950">マイページ</h1>
         </div>
 
         <section className="mb-10 grid gap-6 lg:grid-cols-[380px_1fr]">
@@ -72,7 +72,7 @@ export default function MyPage() {
         <section>
           <div className="mb-5 flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-black">自分の投稿</h2>
+              <h2 className="text-2xl font-bold text-slate-950">自分の投稿</h2>
               <p className="mt-1 text-sm text-slate-500">
                 あなたが作成した募集投稿です。
               </p>
