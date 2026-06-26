@@ -146,7 +146,7 @@ const formatDeleteDate = () => {
   const deleteDateText = formatDeleteDate();
   return (
     <AuthGuard>
-      <main className="mx-auto max-w-4xl px-6 py-10">
+      <main className="mx-auto max-w-4xl px-6 py-10 text-slate-950">
   <section className="overflow-hidden rounded-3xl border bg-white shadow-sm">
     <div className="relative aspect-[16/6] bg-gradient-to-br from-slate-900 to-slate-700">
       <span
@@ -175,7 +175,7 @@ const formatDeleteDate = () => {
         ))}
       </div>
 
-      <h1 className="mb-4 text-3xl font-black leading-tight md:text-4xl">
+      <h1 className="mb-4 text-3xl font-bold text-slate-950 leading-tight md:text-4xl">
         {post.title}
       </h1>
 
@@ -194,7 +194,7 @@ const formatDeleteDate = () => {
       </div>
 
       <section className="mb-8">
-        <h2 className="mb-3 text-xl font-black">
+        <h2 className="mb-3 text-xl font-bold text-slate-950">
           制作内容
         </h2>
 
