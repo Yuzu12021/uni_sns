@@ -1,5 +1,8 @@
 "use client";
 
+import { useRef, useState } from "react";
+import { uploadImageToCloudinary } from "../services/cloudinaryService";
+
 type RichTextEditorProps = {
   value: string;
   onChange: (value: string) => void;
@@ -9,8 +12,47 @@ export default function RichTextEditor({
   value,
   onChange,
 }: RichTextEditorProps) {
-  const insertText = (before: string, after = "") => {
-    onChange(value + before + after);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const insertText = (text: string) => {
+    onChange(value + text);
+  };
+
+  const handleImageButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("画像ファイルを選択してください。");
+      return;
+    }
+
+    try {
+      setIsUploading(true);
+
+      const imageUrl = await uploadImageToCloudinary(file);
+
+      const altText = window.prompt(
+        "画像説明を入力してください（任意）"
+      );
+
+      insertText(`\n![${altText || "画像"}](${imageUrl})\n`);
+
+      event.target.value = "";
+    } catch (error) {
+      console.error(error);
+      alert("画像のアップロードに失敗しました。");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -50,11 +92,20 @@ export default function RichTextEditor({
 
         <button
           type="button"
-          onClick={() => insertText("![画像説明](https://example.com/image.png)")}
-          className="rounded-xl border bg-white px-3 py-2 text-sm font-bold text-slate-700"
+          onClick={handleImageButtonClick}
+          disabled={isUploading}
+          className="rounded-xl border bg-white px-3 py-2 text-sm font-bold text-slate-700 disabled:opacity-50"
         >
-          🖼 Image
+          {isUploading ? "アップロード中..." : "🖼 Image"}
         </button>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleImageUpload}
+        />
       </div>
 
       <textarea
@@ -65,7 +116,7 @@ export default function RichTextEditor({
       />
 
       <p className="mt-2 text-xs font-medium text-slate-600">
-        Markdown形式で、太字・斜体・リンク・画像URLに対応しています。
+        Markdown形式で、太字・斜体・打消し線・リンク・画像に対応しています。
       </p>
     </div>
   );

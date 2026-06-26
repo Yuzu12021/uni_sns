@@ -1,27 +1,30 @@
 export async function uploadImageToCloudinary(file: File) {
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+  if (!cloudName || !uploadPreset) {
+    throw new Error("Cloudinaryの設定が不足しています。");
+  }
 
   const formData = new FormData();
 
   formData.append("file", file);
-
-  formData.append(
-    "upload_preset",
-    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
-  );
+  formData.append("upload_preset", uploadPreset);
+  formData.append("folder", "uni_sns_posts");
 
   const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
 
-`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+  if (!response.ok) {
+    throw new Error("画像のアップロードに失敗しました。");
+  }
 
-{
-method:"POST",
-body:formData
-}
-);
+  const data = await response.json();
 
-
-const data = await response.json();
-
-return data.secure_url;
-
+  return data.secure_url as string;
 }
