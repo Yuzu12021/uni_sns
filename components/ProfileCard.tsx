@@ -13,7 +13,7 @@ export default function ProfileCard({ profile, photoURL }: ProfileCardProps) {
   "https://placehold.jp/150x150.png";
 
   return (
-    <div className="w-full max-w-md rounded-3xl border bg-white p-6 shadow-sm">
+    <div className="w-full max-w-md rounded-3xl border bg-white p-6 text-slate-950 shadow-sm">
       <div className="flex items-center gap-4">
         <img
           src={icon}

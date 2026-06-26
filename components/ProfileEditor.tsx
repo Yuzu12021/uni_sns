@@ -91,7 +91,7 @@ export default function ProfileEditor({ onSaved }: ProfileEditorProps) {
   };
 
   return (
-    <section className="rounded-3xl border bg-white p-6 shadow-sm">
+    <section className="rounded-3xl border bg-white p-6 text-slate-950 shadow-sm">
       <h2 className="mb-5 text-2xl font-black">プロフィール編集</h2>
 
       <div className="mb-8 flex flex-col gap-5 rounded-3xl bg-slate-50 p-5 sm:flex-row sm:items-center">
