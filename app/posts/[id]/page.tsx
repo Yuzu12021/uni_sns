@@ -16,6 +16,7 @@ import {
   deletePost,
 } from "../../../services/postService";
 import PostAuthor from "../../../components/PostAuthor";
+import DescriptionRenderer from "../../../components/DescriptionRenderer";
 
 export default function PostDetailPage() {
   const params = useParams();
@@ -198,9 +199,7 @@ const formatDeleteDate = () => {
           制作内容
         </h2>
 
-        <p className="whitespace-pre-wrap leading-8 text-slate-700">
-          {post.description}
-        </p>
+        <DescriptionRenderer content={post.description} />
       </section>
 
       <section className="mb-8 rounded-2xl bg-slate-50 p-5">
