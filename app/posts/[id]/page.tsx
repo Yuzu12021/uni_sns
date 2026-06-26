@@ -17,6 +17,7 @@ import {
 } from "../../../services/postService";
 import PostAuthor from "../../../components/PostAuthor";
 import DescriptionRenderer from "../../../components/DescriptionRenderer";
+import Link from "next/link";
 
 export default function PostDetailPage() {
   const params = useParams();
@@ -230,26 +231,31 @@ const formatDeleteDate = () => {
     </h2>
 
     <div className="flex flex-wrap gap-3">
-      <button
-        onClick={handleClosePost}
-        disabled={post.status === "応募終了"}
-        className={`rounded-2xl px-5 py-3 font-bold text-white ${
-          post.status === "応募終了"
-            ? "bg-slate-400"
-            : "bg-amber-500"
-        }`}
-      >
-        {post.status === "応募終了"
-          ? "応募終了済み"
-          : "応募を終了する"}
-      </button>
+      <Link
+  href={`/posts/${postId}/edit`}
+  className="rounded-2xl bg-slate-950 px-5 py-3 font-bold text-white"
+>
+  投稿を編集する
+</Link>
 
-      <button
-        onClick={handleDeletePost}
-        className="rounded-2xl bg-red-600 px-5 py-3 font-bold text-white"
-      >
-        投稿を削除する
-      </button>
+<button
+  onClick={handleClosePost}
+  disabled={post.status === "応募終了"}
+  className={`rounded-2xl px-5 py-3 font-bold text-white ${
+    post.status === "応募終了"
+      ? "bg-slate-400"
+      : "bg-amber-500"
+  }`}
+>
+  {post.status === "応募終了" ? "応募終了済み" : "応募を終了する"}
+</button>
+
+<button
+  onClick={handleDeletePost}
+  className="rounded-2xl bg-red-600 px-5 py-3 font-bold text-white"
+>
+  投稿を削除する
+</button>
     </div>
   </section>
 )}

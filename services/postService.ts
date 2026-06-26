@@ -105,3 +105,22 @@ export async function createPost(data: CreatePostInput) {
     updatedAt: serverTimestamp(),
   });
 }
+
+type UpdatePostInput = {
+  title: string;
+  description: string;
+  genre: string;
+  roles: string[];
+  tools: string;
+  neededCount: string;
+  deadline: string;
+};
+
+export async function updatePost(id: string, data: UpdatePostInput) {
+  const postRef = doc(db, "posts", id);
+
+  await updateDoc(postRef, {
+    ...data,
+    updatedAt: serverTimestamp(),
+  });
+}
