@@ -46,6 +46,13 @@ export default function NewPostPage() {
       return;
     }
 
+  const imageCount =
+(description.match(/!\[/g) || []).length;
+
+if (imageCount > 2) {
+setMessage("画像は2枚までです。");
+return;
+}  
     if (!title || !description || !genre || roles.length === 0 || !neededCount) {
       setMessage("タイトル、内容、ジャンル、募集職種、募集人数は必須です。");
       return;

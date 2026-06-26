@@ -28,7 +28,12 @@ export default function RichTextEditor({
   ) => {
     const file = event.target.files?.[0];
 
-    if (!file) return;
+if (!file) return;
+
+if (imageCount >= 2) {
+  alert("画像は2枚まで挿入できます。");
+  return;
+}
 
     if (!file.type.startsWith("image/")) {
       alert("画像ファイルを選択してください。");
@@ -55,6 +60,7 @@ export default function RichTextEditor({
     }
   };
 
+  const imageCount = (value.match(/!\[/g) || []).length;
   return (
     <div>
       <div className="mb-2 flex flex-wrap gap-2 rounded-2xl border bg-slate-50 p-2">
@@ -96,7 +102,11 @@ export default function RichTextEditor({
           disabled={isUploading}
           className="rounded-xl border bg-white px-3 py-2 text-sm font-bold text-slate-700 disabled:opacity-50"
         >
-          {isUploading ? "アップロード中..." : "🖼 Image"}
+          {
+isUploading
+? "アップロード中..."
+: `🖼 Image (${imageCount}/2)`
+}
         </button>
 
         <input
