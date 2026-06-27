@@ -12,6 +12,7 @@ type PostCardProps = {
   status: string;
   ownerId: string;
   ownerEmail: string;
+  applicationCount?: number;
 };
 
 export default function PostCard({
@@ -24,6 +25,7 @@ export default function PostCard({
   status,
   ownerId,
   ownerEmail,
+  applicationCount = 0,
 }: PostCardProps) {
   const isClosed = status === "応募終了";
 
@@ -42,6 +44,12 @@ export default function PostCard({
           >
             {status}
           </span>
+
+            {applicationCount > 0 && (
+  <span className="absolute right-3 top-3 rounded-full bg-pink-600 px-3 py-1 text-xs font-bold text-white">
+    応募 {applicationCount}件
+  </span>
+)}
 
           <div className="absolute inset-0 flex items-center justify-center text-5xl text-white/80">
             🎮

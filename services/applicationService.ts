@@ -1,4 +1,5 @@
 import {
+  getDoc,
   addDoc,
   collection,
   getDocs,
@@ -14,7 +15,33 @@ type CreateApplicationInput = {
   applicantId: string;
   applicantEmail: string;
 };
+export async function getApplicationsByPostId(postId: string) {
+  const q = query(
+    collection(db, "applications"),
+    where("postId", "==", postId)
+  );
 
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((docItem) => ({
+    id: docItem.id,
+    ...docItem.data(),
+  }));
+}
+
+export async function getApplicationsByOwnerId(ownerId: string) {
+  const q = query(
+    collection(db, "applications"),
+    where("postOwnerId", "==", ownerId)
+  );
+
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((docItem) => ({
+    id: docItem.id,
+    ...docItem.data(),
+  }));
+}
 export async function hasAlreadyApplied(postId: string, applicantId: string) {
   const q = query(
     collection(db, "applications"),

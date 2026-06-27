@@ -11,6 +11,7 @@ import { getPostsByOwner } from "../../services/postService";
 import { getUserProfile } from "../../services/userService";
 import { Post } from "../../types/post";
 import { UserProfile } from "../../types/user";
+import { getApplicationsByOwnerId } from "../../services/applicationService";
 
 export default function MyPage() {
   const { uid, photoURL } = useAuthUser();
@@ -18,15 +19,24 @@ export default function MyPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [myPosts, setMyPosts] = useState<Post[]>([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [applicationCounts, setApplicationCounts] = useState<Record<string, number>>({});
 
   const fetchMyPageData = async () => {
     if (!uid) return;
 
     const profileData = await getUserProfile(uid);
-    const postData = await getPostsByOwner(uid);
+const postData = await getPostsByOwner(uid);
+const applications = await getApplicationsByOwnerId(uid);
 
-    setProfile(profileData);
-    setMyPosts(postData);
+const counts: Record<string, number> = {};
+
+applications.forEach((application: any) => {
+  counts[application.postId] = (counts[application.postId] || 0) + 1;
+});
+
+setProfile(profileData);
+setMyPosts(postData);
+setApplicationCounts(counts);
   };
 
   useEffect(() => {
@@ -104,6 +114,7 @@ export default function MyPage() {
                   status={post.status}
                   ownerId={post.ownerId}
                   ownerEmail={post.ownerEmail}
+                  applicationCount={applicationCounts[post.id]||0}
                 />
               ))}
             </div>
