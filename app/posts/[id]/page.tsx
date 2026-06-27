@@ -7,8 +7,11 @@ import RoleBadge from "../../../components/RoleBadge";
 import { useAuthUser } from "../../../hooks/useAuthUser";
 import {
   createApplication,
+  getApplicationsByPostId,
   hasAlreadyApplied,
 } from "../../../services/applicationService";
+
+
 import { getPostById } from "../../../services/postService";
 import { Post } from "../../../types/post";
 import {
@@ -18,6 +21,8 @@ import {
 import PostAuthor from "../../../components/PostAuthor";
 import DescriptionRenderer from "../../../components/DescriptionRenderer";
 import Link from "next/link";
+import ApplicationList from "../../../components/ApplicationList";
+import { Application } from "../../../types/application";
 
 export default function PostDetailPage() {
   const params = useParams();
@@ -32,6 +37,8 @@ export default function PostDetailPage() {
 
   const isOwner = post?.ownerId === uid;
   const router = useRouter();
+
+  const [applications, setApplications] = useState<Application[]>([]);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -53,6 +60,17 @@ export default function PostDetailPage() {
 
     checkApplied();
   }, [postId, uid]);
+
+  useEffect(() => {
+  const fetchApplications = async () => {
+    if (!postId) return;
+
+    const data = await getApplicationsByPostId(postId);
+    setApplications(data as Application[]);
+  };
+
+  fetchApplications();
+}, [postId]);
 
   const handleApply = async () => {
     if (!post || !uid || !email) {
@@ -286,6 +304,10 @@ const formatDeleteDate = () => {
       </p>
     )}
   </>
+)}
+
+{isOwner && (
+  <ApplicationList applications={applications} />
 )}
     </div>
   </section>

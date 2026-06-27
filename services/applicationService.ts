@@ -1,10 +1,11 @@
 import {
-  getDoc,
   addDoc,
   collection,
+  doc,
   getDocs,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../lib/firebase";
@@ -15,6 +16,19 @@ type CreateApplicationInput = {
   applicantId: string;
   applicantEmail: string;
 };
+
+export async function updateApplicationStatus(
+  applicationId: string,
+  status: "accepted" | "rejected"
+) {
+  const applicationRef = doc(db, "applications", applicationId);
+
+  await updateDoc(applicationRef, {
+    status,
+    updatedAt: serverTimestamp(),
+  });
+}
+
 export async function getApplicationsByPostId(postId: string) {
   const q = query(
     collection(db, "applications"),
