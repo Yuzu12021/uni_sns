@@ -21,6 +21,18 @@ type UpsertChatRoomInput = {
   applicantId: string;
 };
 
+export async function markChatAsRead(chatId: string, uid: string) {
+  await setDoc(
+    doc(db, "chats", chatId),
+    {
+      lastReadAtByUser: {
+        [uid]: serverTimestamp(),
+      },
+    },
+    { merge: true }
+  );
+}
+
 export async function sendChatMessage({
   chatId,
   senderId,

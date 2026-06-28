@@ -8,6 +8,7 @@ import { getUserProfile } from "../../../services/userService";
 import {
   sendChatMessage,
   subscribeChatMessages,
+  markChatAsRead,
 } from "../../../services/chatService";
 import { UserProfile } from "../../../types/user";
 import ProfileModal from "../../../components/ProfileModal";
@@ -42,6 +43,12 @@ const [selectedProfile, setSelectedProfile] =
 
     return () => unsubscribe();
   }, [chatId]);
+
+  useEffect(() => {
+  if (!chatId || !uid) return;
+
+  markChatAsRead(chatId, uid);
+}, [chatId, uid, messages.length]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
