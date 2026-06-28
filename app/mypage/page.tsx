@@ -12,6 +12,8 @@ import { getUserProfile } from "../../services/userService";
 import { Post } from "../../types/post";
 import { UserProfile } from "../../types/user";
 import { getApplicationsByOwnerId } from "../../services/applicationService";
+import { getChatRoomsByMemberId } from "../../services/chatService";
+import { ChatRoom } from "../../types/chat";
 
 export default function MyPage() {
   const { uid, photoURL } = useAuthUser();
@@ -20,6 +22,7 @@ export default function MyPage() {
   const [myPosts, setMyPosts] = useState<Post[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [applicationCounts, setApplicationCounts] = useState<Record<string, number>>({});
+  const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
 
   const fetchMyPageData = async () => {
     if (!uid) return;
@@ -27,8 +30,10 @@ export default function MyPage() {
     const profileData = await getUserProfile(uid);
 const postData = await getPostsByOwner(uid);
 const applications = await getApplicationsByOwnerId(uid);
+const chatData = await getChatRoomsByMemberId(uid);
 
 const counts: Record<string, number> = {};
+
 
 applications.forEach((application: any) => {
   counts[application.postId] = (counts[application.postId] || 0) + 1;
@@ -37,6 +42,7 @@ applications.forEach((application: any) => {
 setProfile(profileData);
 setMyPosts(postData);
 setApplicationCounts(counts);
+setChatRooms(chatData);
   };
 
   useEffect(() => {
@@ -78,6 +84,51 @@ setApplicationCounts(counts);
             />
           )}
         </section>
+
+          <section className="mb-10">
+  <div className="mb-5">
+    <h2 className="text-2xl font-bold text-slate-950">
+      参加中プロジェクト
+    </h2>
+    <p className="mt-1 text-sm text-slate-700">
+      承認された企画のチャット一覧です。
+    </p>
+  </div>
+
+  {chatRooms.length === 0 ? (
+    <div className="rounded-3xl border bg-white p-6 text-sm font-bold text-slate-600">
+      参加中のプロジェクトはまだありません。
+    </div>
+  ) : (
+    <div className="space-y-3">
+      {chatRooms.map((chat) => (
+        <Link
+          key={chat.id}
+          href={`/chats/${chat.id}`}
+          className="block rounded-3xl border bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold text-slate-500">
+                Project Chat
+              </p>
+              <h3 className="mt-1 text-lg font-bold text-slate-950">
+                {chat.postTitle}
+              </h3>
+              <p className="mt-1 text-sm font-medium text-slate-600">
+                参加メンバー：{chat.memberIds.length}人
+              </p>
+            </div>
+
+            <span className="rounded-full bg-slate-950 px-4 py-2 text-sm font-bold text-white">
+              開く
+            </span>
+          </div>
+        </Link>
+      ))}
+    </div>
+  )}
+</section>
 
         <section>
           <div className="mb-5 flex items-center justify-between">
