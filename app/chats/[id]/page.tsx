@@ -10,7 +10,7 @@ import {
   subscribeChatMessages,
 } from "../../../services/chatService";
 import { UserProfile } from "../../../types/user";
-
+import ProfileModal from "../../../components/ProfileModal";
 export default function ChatPage() {
   const params = useParams();
   const chatId = params.id as string;
@@ -20,7 +20,8 @@ export default function ChatPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [text, setText] = useState("");
-
+const [selectedProfile, setSelectedProfile] =
+  useState<UserProfile | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -101,14 +102,25 @@ export default function ChatPage() {
                     }`}
                   >
                     {!isMe && (
-                      <img
-                        src={
-                          message.senderIconUrl ||
-                          "https://placehold.jp/150x150.png"
-                        }
-                        alt="アイコン"
-                        className="h-9 w-9 rounded-full border bg-white object-cover"
-                      />
+                      <button
+  type="button"
+  onClick={async () => {
+    const profile = await getUserProfile(message.senderId);
+
+    if (profile) {
+      setSelectedProfile(profile);
+    }
+  }}
+>
+  <img
+    src={
+      message.senderIconUrl ||
+      "https://placehold.jp/150x150.png"
+    }
+    alt="アイコン"
+    className="h-9 w-9 rounded-full border bg-white object-cover"
+  />
+</button>
                     )}
 
                     <div
@@ -125,8 +137,25 @@ export default function ChatPage() {
                       )}
 
                       <p className="whitespace-pre-wrap text-sm leading-6">
-                        {message.text}
-                      </p>
+  {message.text}
+</p>
+
+<p
+  className={`mt-1 text-[11px] ${
+    isMe
+      ? "text-slate-300"
+      : "text-slate-400"
+  }`}
+>
+  {message.createdAt?.toDate
+    ? message.createdAt
+        .toDate()
+        .toLocaleTimeString("ja-JP", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+    : ""}
+</p>
                     </div>
                   </div>
                 );
@@ -158,7 +187,14 @@ export default function ChatPage() {
               </button>
             </div>
           </div>
-        </section>
+                </section>
+
+        {selectedProfile && (
+          <ProfileModal
+            profile={selectedProfile}
+            onClose={() => setSelectedProfile(null)}
+          />
+        )}
       </main>
     </AuthGuard>
   );
