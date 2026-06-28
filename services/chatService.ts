@@ -42,17 +42,18 @@ export async function upsertProjectChatRoom({
   const chatSnap = await getDoc(chatRef);
 
   if (chatSnap.exists()) {
-    await setDoc(
-      chatRef,
-      {
-        memberIds: arrayUnion(applicantId),
-        updatedAt: serverTimestamp(),
-      },
-      { merge: true }
-    );
+  await setDoc(
+    chatRef,
+    {
+      ownerId,
+      memberIds: arrayUnion(ownerId, applicantId),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
 
-    return;
-  }
+  return;
+}
 
   await setDoc(chatRef, {
     postId,

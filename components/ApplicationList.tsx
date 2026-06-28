@@ -185,10 +185,27 @@ export default function ApplicationList({
   )}
 
   {application.status === "accepted" && (
+  <div className="flex gap-2">
     <span className="rounded-xl bg-green-100 px-4 py-2 text-sm font-bold text-green-700">
       承認済み
     </span>
-  )}
+
+    <button
+      type="button"
+      onClick={() =>
+        upsertProjectChatRoom({
+          postId,
+          postTitle,
+          ownerId,
+          applicantId: application.applicantId,
+        })
+      }
+      className="rounded-xl bg-slate-950 px-4 py-2 text-sm font-bold text-white"
+    >
+      チャット作成
+    </button>
+  </div>
+)}
 
   {application.status === "rejected" && (
     <span className="rounded-xl bg-red-100 px-4 py-2 text-sm font-bold text-red-700">
