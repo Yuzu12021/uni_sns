@@ -1,9 +1,11 @@
 import {
+  addDoc,
   arrayUnion,
   collection,
   doc,
-  getDoc,
   getDocs,
+  onSnapshot,
+  orderBy,
   query,
   serverTimestamp,
   setDoc,
@@ -18,6 +20,58 @@ type UpsertChatRoomInput = {
   ownerId: string;
   applicantId: string;
 };
+
+export async function sendChatMessage({
+  chatId,
+  senderId,
+  senderName,
+  senderIconUrl,
+  text,
+}: {
+  chatId: string;
+  senderId: string;
+  senderName: string;
+  senderIconUrl: string;
+  text: string;
+}) {
+  await addDoc(collection(db, "chats", chatId, "messages"), {
+    chatId,
+    senderId,
+    senderName,
+    senderIconUrl,
+    text,
+    createdAt: serverTimestamp(),
+  });
+
+  await setDoc(
+    doc(db, "chats", chatId),
+    {
+      lastMessage: text,
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
+}
+
+export function subscribeChatMessages(
+  chatId: string,
+  callback: (messages: any[]) => void
+) {
+  const q = query(
+    collection(db, "chats", chatId, "messages"),
+    orderBy("createdAt", "asc")
+  );
+
+  return onSnapshot(q, (snapshot) => {
+    const messages = snapshot.docs.map((docItem) => ({
+      id: docItem.id,
+      ...docItem.data(),
+    }));
+
+    callback(messages);
+  });
+}
+
 export async function getChatRoomsByMemberId(uid: string) {
   const q = query(
     collection(db, "chats"),
