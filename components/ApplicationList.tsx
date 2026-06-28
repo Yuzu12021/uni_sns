@@ -138,28 +138,42 @@ export default function ApplicationList({
                   </button>
 
                   <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleStatusChange(application.id, "accepted")
-                      }
-                      disabled={application.status === "accepted"}
-                      className="rounded-xl bg-green-600 px-4 py-2 text-sm font-bold text-white disabled:opacity-40"
-                    >
-                      承認
-                    </button>
+  {application.status === "pending" && (
+    <>
+      <button
+        type="button"
+        onClick={() =>
+          handleStatusChange(application.id, "accepted")
+        }
+        className="rounded-xl bg-green-600 px-4 py-2 text-sm font-bold text-white"
+      >
+        承認
+      </button>
 
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleStatusChange(application.id, "rejected")
-                      }
-                      disabled={application.status === "rejected"}
-                      className="rounded-xl bg-red-600 px-4 py-2 text-sm font-bold text-white disabled:opacity-40"
-                    >
-                      辞退
-                    </button>
-                  </div>
+      <button
+        type="button"
+        onClick={() =>
+          handleStatusChange(application.id, "rejected")
+        }
+        className="rounded-xl bg-red-600 px-4 py-2 text-sm font-bold text-white"
+      >
+        辞退
+      </button>
+    </>
+  )}
+
+  {application.status === "accepted" && (
+    <span className="rounded-xl bg-green-100 px-4 py-2 text-sm font-bold text-green-700">
+      承認済み
+    </span>
+  )}
+
+  {application.status === "rejected" && (
+    <span className="rounded-xl bg-red-100 px-4 py-2 text-sm font-bold text-red-700">
+      辞退済み
+    </span>
+  )}
+</div>
                 </div>
               );
             })
