@@ -307,7 +307,12 @@ const formatDeleteDate = () => {
 )}
 
 {isOwner && (
-  <ApplicationList applications={applications} />
+  <ApplicationList
+  applications={applications}
+  postId={postId}
+  postTitle={post.title}
+  ownerId={post.ownerId}
+/>
 )}
     </div>
   </section>

@@ -5,14 +5,21 @@ import { getUserProfile } from "../services/userService";
 import { updateApplicationStatus } from "../services/applicationService";
 import { Application } from "../types/application";
 import { UserProfile } from "../types/user";
+import { upsertProjectChatRoom } from "../services/chatService";
 import ProfileModal from "./ProfileModal";
 
 type ApplicationListProps = {
   applications: Application[];
+  postId:string;
+  postTitle:string;
+  ownerId:string;
 };
 
 export default function ApplicationList({
   applications,
+  postId,
+  postTitle,
+  ownerId,
 }: ApplicationListProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [profiles, setProfiles] = useState<Record<string, UserProfile>>({});
@@ -47,19 +54,26 @@ export default function ApplicationList({
   }, [applications]);
 
   const handleStatusChange = async (
-    applicationId: string,
-    status: "accepted" | "rejected"
-  ) => {
-    await updateApplicationStatus(applicationId, status);
+  application: Application,
+  status: "accepted" | "rejected"
+) => {
+  await updateApplicationStatus(application.id, status);
 
-    setLocalApplications((current) =>
-      current.map((application) =>
-        application.id === applicationId
-          ? { ...application, status }
-          : application
-      )
-    );
-  };
+  if (status === "accepted") {
+    await upsertProjectChatRoom({
+      postId,
+      postTitle,
+      ownerId,
+      applicantId: application.applicantId,
+    });
+  }
+
+  setLocalApplications((current) =>
+    current.map((item) =>
+      item.id === application.id ? { ...item, status } : item
+    )
+  );
+};
 
   const statusLabel = {
     pending: "応募中",
@@ -131,9 +145,17 @@ export default function ApplicationList({
                       <p className="font-bold text-slate-950">
                         {displayName}
                       </p>
-                      <p className="text-xs font-medium text-slate-600">
-                        {statusLabel[application.status]}
-                      </p>
+                      <p
+  className={`text-xs font-bold ${
+    application.status === "accepted"
+      ? "text-green-700"
+      : application.status === "rejected"
+      ? "text-red-700"
+      : "text-slate-600"
+  }`}
+>
+  {statusLabel[application.status]}
+</p>
                     </div>
                   </button>
 
@@ -143,7 +165,7 @@ export default function ApplicationList({
       <button
         type="button"
         onClick={() =>
-          handleStatusChange(application.id, "accepted")
+          handleStatusChange(application, "accepted")
         }
         className="rounded-xl bg-green-600 px-4 py-2 text-sm font-bold text-white"
       >
@@ -153,7 +175,7 @@ export default function ApplicationList({
       <button
         type="button"
         onClick={() =>
-          handleStatusChange(application.id, "rejected")
+          handleStatusChange(application, "rejected")
         }
         className="rounded-xl bg-red-600 px-4 py-2 text-sm font-bold text-white"
       >
