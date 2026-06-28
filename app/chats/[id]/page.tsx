@@ -9,6 +9,7 @@ import {
   sendChatMessage,
   subscribeChatMessages,
   markChatAsRead,
+  subscribeChatRoom,
 } from "../../../services/chatService";
 import { UserProfile } from "../../../types/user";
 import ProfileModal from "../../../components/ProfileModal";
@@ -21,6 +22,8 @@ export default function ChatPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [text, setText] = useState("");
+const [chatRoom, setChatRoom] = useState<any>(null);
+
 const [selectedProfile, setSelectedProfile] =
   useState<UserProfile | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -55,6 +58,31 @@ const [selectedProfile, setSelectedProfile] =
       behavior: "smooth",
     });
   }, [messages]);
+
+useEffect(() => {
+  if (!chatId) return;
+
+  const unsubscribe = subscribeChatRoom(chatId, setChatRoom);
+
+  return () => unsubscribe();
+}, [chatId]);
+
+const isMessageRead = (message: any) => {
+  if (!uid || !chatRoom) return false;
+  if (message.senderId !== uid) return false;
+  if (!message.createdAt?.toDate) return false;
+
+  const memberIds: string[] = chatRoom.memberIds || [];
+  const otherMemberIds = memberIds.filter((memberId) => memberId !== uid);
+
+  return otherMemberIds.some((memberId) => {
+    const readAt = chatRoom.lastReadAtByUser?.[memberId];
+
+    if (!readAt?.toDate) return false;
+
+    return readAt.toDate() >= message.createdAt.toDate();
+  });
+};
 
   const handleSend = async () => {
     if (!uid || !text.trim()) return;
@@ -147,22 +175,26 @@ const [selectedProfile, setSelectedProfile] =
   {message.text}
 </p>
 
-<p
-  className={`mt-1 text-[11px] ${
-    isMe
-      ? "text-slate-300"
-      : "text-slate-400"
+<div
+  className={`mt-1 flex items-center gap-2 text-[11px] ${
+    isMe ? "justify-end text-slate-300" : "text-slate-400"
   }`}
 >
-  {message.createdAt?.toDate
-    ? message.createdAt
-        .toDate()
-        .toLocaleTimeString("ja-JP", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-    : ""}
-</p>
+  {isMe && isMessageRead(message) && (
+    <span>既読</span>
+  )}
+
+  <span>
+    {message.createdAt?.toDate
+      ? message.createdAt
+          .toDate()
+          .toLocaleTimeString("ja-JP", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+      : ""}
+  </span>
+</div>
                     </div>
                   </div>
                 );

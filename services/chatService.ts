@@ -21,6 +21,22 @@ type UpsertChatRoomInput = {
   applicantId: string;
 };
 
+export function subscribeChatRoom(
+  chatId: string,
+  callback: (chatRoom: any) => void
+) {
+  const chatRef = doc(db, "chats", chatId);
+
+  return onSnapshot(chatRef, (snapshot) => {
+    if (!snapshot.exists()) return;
+
+    callback({
+      id: snapshot.id,
+      ...snapshot.data(),
+    });
+  });
+}
+
 export async function markChatAsRead(chatId: string, uid: string) {
   await setDoc(
     doc(db, "chats", chatId),
