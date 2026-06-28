@@ -39,28 +39,17 @@ export async function upsertProjectChatRoom({
   applicantId,
 }: UpsertChatRoomInput) {
   const chatRef = doc(db, "chats", postId);
-  const chatSnap = await getDoc(chatRef);
 
-  if (chatSnap.exists()) {
   await setDoc(
     chatRef,
     {
+      postId,
+      postTitle,
       ownerId,
       memberIds: arrayUnion(ownerId, applicantId),
       updatedAt: serverTimestamp(),
+      createdAt: serverTimestamp(),
     },
     { merge: true }
   );
-
-  return;
-}
-
-  await setDoc(chatRef, {
-    postId,
-    postTitle,
-    ownerId,
-    memberIds: [ownerId, applicantId],
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  });
 }
