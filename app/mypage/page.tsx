@@ -57,33 +57,35 @@ setChatRooms(chatData);
           <h1 className="text-3xl font-bold text-slate-950">マイページ</h1>
         </div>
 
-        <section className="mb-10 grid gap-6 lg:grid-cols-[380px_1fr]">
-          <div>
-            {profile ? (
-              <FullProfile profile={profile} photoURL={photoURL} />
-            ) : (
-              <div className="rounded-3xl border bg-white p-6 text-slate-500">
-                プロフィールが未設定です。
-              </div>
-            )}
+        <section className="mb-10">
+  <div>
+    {profile ? (
+      <FullProfile profile={profile} photoURL={photoURL} />
+    ) : (
+      <div className="rounded-3xl border bg-white p-6 text-slate-500">
+        プロフィールが未設定です。
+      </div>
+    )}
 
-            <button
-              onClick={() => setIsEditing((prev) => !prev)}
-              className="mt-4 w-full rounded-2xl bg-slate-950 px-5 py-3 font-bold text-white"
-            >
-              {isEditing ? "編集を閉じる" : "プロフィールを編集する"}
-            </button>
-          </div>
+    <button
+      onClick={() => setIsEditing((prev) => !prev)}
+      className="mt-4 w-full rounded-2xl bg-slate-950 px-5 py-3 font-bold text-white"
+    >
+      {isEditing ? "編集を閉じる" : "プロフィールを編集する"}
+    </button>
+  </div>
 
-          {isEditing && (
-            <ProfileEditor
-              onSaved={() => {
-                fetchMyPageData();
-                setIsEditing(false);
-              }}
-            />
-          )}
-        </section>
+  {isEditing && (
+    <div className="mt-6">
+      <ProfileEditor
+        onSaved={() => {
+          fetchMyPageData();
+          setIsEditing(false);
+        }}
+      />
+    </div>
+  )}
+</section>
 
           <section className="mb-10">
   <div className="mb-5">

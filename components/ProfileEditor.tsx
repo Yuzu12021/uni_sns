@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuthUser } from "../hooks/useAuthUser";
 import { getUserProfile, saveUserProfile } from "../services/userService";
 import { uploadImageToCloudinary } from "../services/cloudinaryService";
+import IconCropper from "./IconCropper";
 
 const roleOptions = [
   "プログラマ",
@@ -128,66 +129,14 @@ export default function ProfileEditor({ onSaved }: ProfileEditorProps) {
     <section className="rounded-3xl border bg-white p-6 text-slate-950 shadow-sm">
       <h2 className="mb-5 text-2xl font-black">プロフィール編集</h2>
 
-      <div className="mb-8 flex flex-col gap-5 rounded-3xl bg-slate-50 p-5 sm:flex-row sm:items-center">
-        <img
-          src={
-  iconUrl ||
-  photoURL ||
-  "https://placehold.jp/150x150.png"
-}
-          alt="プロフィールアイコン"
-          className="h-24 w-24 rounded-full border bg-white object-cover"
-        />
-
-        <div>
-  <label className="mb-1 block text-sm font-bold">
-    アイコン画像
-  </label>
-
-  <input
-    type="file"
-    accept="image/*"
-    className="w-full rounded-2xl border px-4 py-3 text-sm"
-    disabled={isIconUploading}
-    onChange={async (e) => {
-      const file = e.target.files?.[0];
-
-      if (!file) return;
-
-      if (!file.type.startsWith("image/")) {
-        alert("画像ファイルを選択してください。");
-        return;
-      }
-
-      try {
-        setIsIconUploading(true);
-
-        const imageUrl = await uploadImageToCloudinary(file);
-        setIconUrl(imageUrl);
-      } catch (error) {
-        console.error(error);
-        alert("アイコン画像のアップロードに失敗しました。");
-      } finally {
-        setIsIconUploading(false);
-      }
+      <div className="mb-8">
+  <IconCropper
+    currentIconUrl={iconUrl}
+    onUploaded={(url) => {
+      setIconUrl(url);
     }}
   />
-
-  {isIconUploading && (
-    <p className="mt-2 text-sm font-bold text-slate-600">
-      アップロード中...
-    </p>
-  )}
-
-  {iconUrl && (
-    <img
-      src={iconUrl}
-      alt="アイコンプレビュー"
-      className="mt-3 h-20 w-20 rounded-full border object-cover"
-    />
-  )}
 </div>
-      </div>
 
       <div className="grid gap-5 md:grid-cols-2">
         <div>
