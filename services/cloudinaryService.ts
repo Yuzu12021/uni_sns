@@ -10,7 +10,6 @@ export async function uploadImageToCloudinary(file: File) {
 
   formData.append("file", file);
   formData.append("upload_preset", uploadPreset);
-  formData.append("folder", "uni_sns_posts");
 
   const response = await fetch(
     `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
@@ -20,11 +19,12 @@ export async function uploadImageToCloudinary(file: File) {
     }
   );
 
-  if (!response.ok) {
-    throw new Error("画像のアップロードに失敗しました。");
-  }
-
   const data = await response.json();
+
+  if (!response.ok) {
+    console.error(data);
+    throw new Error(data.error?.message ?? "画像のアップロードに失敗しました。");
+  }
 
   return data.secure_url as string;
 }
