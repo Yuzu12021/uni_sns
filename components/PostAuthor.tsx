@@ -33,7 +33,7 @@ export default function PostAuthor({ ownerId, ownerEmail }: PostAuthorProps) {
   "https://placehold.jp/150x150.png";
 
   return (
-    <>
+    <div className="relative">
       <button
   type="button"
   onMouseDown={(e) => {
@@ -61,6 +61,6 @@ export default function PostAuthor({ ownerId, ownerEmail }: PostAuthorProps) {
       {isOpen && profile && (
         <ProfileModal profile={profile} onClose={() => setIsOpen(false)} />
       )}
-    </>
+    </div>
   );
 }

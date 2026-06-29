@@ -16,36 +16,25 @@ export default function ProfileModal({
 }: ProfileModalProps) {
   return (
     <div
-  className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4"
-  onClick={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
+      className="absolute left-0 top-10 z-50 w-80 max-w-[90vw]"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+    >
+      <ProfileCard profile={profile} photoURL={photoURL} />
 
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  }}
->
-      <div
-  className="w-full max-w-md"
-  onClick={(e) => {
-    e.stopPropagation();
-  }}
->
-        <ProfileCard profile={profile} photoURL={photoURL} />
-
-        <button
-  type="button"
-  onClick={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onClose();
-  }}
-  className="mt-4 w-full rounded-2xl bg-white px-5 py-3 font-bold text-slate-900"
->
-  閉じる
-</button>
-      </div>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onClose();
+        }}
+        className="mt-3 w-full rounded-2xl bg-white px-5 py-3 font-bold text-slate-900 shadow"
+      >
+        閉じる
+      </button>
     </div>
   );
 }
