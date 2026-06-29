@@ -35,13 +35,18 @@ export default function PostAuthor({ ownerId, ownerEmail }: PostAuthorProps) {
   return (
     <>
       <button
-        type="button"
-        onClick={(e) => {
-          e.preventDefault();
-          setIsOpen(true);
-        }}
-        className="flex items-center gap-2 text-left"
-      >
+  type="button"
+  onMouseDown={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }}
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsOpen(true);
+  }}
+  className="flex items-center gap-2 text-left"
+>
         <img
           src={iconUrl}
           alt="投稿者アイコン"

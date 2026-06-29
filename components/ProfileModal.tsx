@@ -16,46 +16,35 @@ export default function ProfileModal({
 }: ProfileModalProps) {
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4"
-      onMouseDown={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
+  className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4"
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-    >
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  }}
+>
       <div
-        className="w-full max-w-md"
-        onMouseDown={(e) => {
-          e.stopPropagation();
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
+  className="w-full max-w-md"
+  onClick={(e) => {
+    e.stopPropagation();
+  }}
+>
         <ProfileCard profile={profile} photoURL={photoURL} />
 
         <button
-          type="button"
-          onMouseDown={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onClose();
-          }}
-          className="mt-4 w-full rounded-2xl bg-white px-5 py-3 font-bold text-slate-900"
-        >
-          閉じる
-        </button>
+  type="button"
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClose();
+  }}
+  className="mt-4 w-full rounded-2xl bg-white px-5 py-3 font-bold text-slate-900"
+>
+  閉じる
+</button>
       </div>
     </div>
   );
