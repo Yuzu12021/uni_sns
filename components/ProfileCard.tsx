@@ -38,9 +38,9 @@ export default function ProfileCard({ profile, photoURL }: ProfileCardProps) {
         </div>
       </div>
 
-      {profile.shortBio && (
+      {profile.bio && (
         <p className="mt-5 whitespace-pre-wrap rounded-2xl bg-slate-50 p-4 text-sm font-medium leading-7 text-slate-700">
-          {profile.shortBio}
+          {profile.bio}
         </p>
       )}
 

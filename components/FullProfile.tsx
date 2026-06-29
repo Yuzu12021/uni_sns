@@ -42,25 +42,17 @@ export default function FullProfile({ profile, photoURL }: FullProfileProps) {
         </div>
       </div>
 
-      {profile.shortBio && (
-        <div className="mt-6 rounded-2xl bg-slate-50 p-4">
-          <p className="text-sm font-bold text-slate-500">一言</p>
-          <p className="mt-2 whitespace-pre-wrap text-slate-800">
-            {profile.shortBio}
-          </p>
-        </div>
-      )}
 
       {profile.bio && (
-        <div className="mt-6">
-          <h2 className="mb-3 text-xl font-bold text-slate-950">
-            自己紹介
-          </h2>
-          <p className="whitespace-pre-wrap leading-8 text-slate-700">
-            {profile.bio}
-          </p>
-        </div>
-      )}
+  <div className="mt-6 rounded-2xl bg-slate-50 p-4">
+    <h2 className="mb-3 text-xl font-bold text-slate-950">
+      自己紹介
+    </h2>
+    <p className="whitespace-pre-wrap leading-8 text-slate-700">
+      {profile.bio}
+    </p>
+  </div>
+)}
 
       {profile.roles?.length > 0 && (
         <div className="mt-6">
@@ -83,30 +75,6 @@ export default function FullProfile({ profile, photoURL }: FullProfileProps) {
           <p className="rounded-2xl bg-slate-50 p-4 text-slate-700">
             {profile.tools}
           </p>
-        </div>
-      )}
-
-      {profile.portfolioUrls?.filter(Boolean).length > 0 && (
-        <div className="mt-6">
-          <h2 className="mb-3 text-xl font-bold text-slate-950">
-            ポートフォリオ
-          </h2>
-
-          <div className="space-y-2">
-            {profile.portfolioUrls
-              .filter(Boolean)
-              .map((url, index) => (
-                <a
-                  key={index}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block rounded-2xl bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700 underline"
-                >
-                  {url}
-                </a>
-              ))}
-          </div>
         </div>
       )}
     </section>

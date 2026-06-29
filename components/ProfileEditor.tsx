@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuthUser } from "../hooks/useAuthUser";
 import { getUserProfile, saveUserProfile } from "../services/userService";
+import { uploadImageToCloudinary } from "../services/cloudinaryService";
 
 const roleOptions = [
   "プログラマ",
@@ -60,6 +61,8 @@ export default function ProfileEditor({ onSaved }: ProfileEditorProps) {
   const[shortBio,setShortBio]=useState("");
 
   const [message, setMessage] = useState("");
+
+  const [isIconUploading, setIsIconUploading] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -136,18 +139,54 @@ export default function ProfileEditor({ onSaved }: ProfileEditorProps) {
           className="h-24 w-24 rounded-full border bg-white object-cover"
         />
 
-        <div className="flex-1">
-          <label className="mb-1 block text-sm font-bold">アイコンURL</label>
-          <input
-            className="w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none focus:border-slate-400"
-            value={iconUrl}
-            onChange={(e) => setIconUrl(e.target.value)}
-            placeholder="Googleアイコンを使用、または画像URLを入力"
-          />
-          <p className="mt-2 text-xs text-slate-500">
-            未入力の場合はGoogleアカウントのアイコンを使用します。
-          </p>
-        </div>
+        <div>
+  <label className="mb-1 block text-sm font-bold">
+    アイコン画像
+  </label>
+
+  <input
+    type="file"
+    accept="image/*"
+    className="w-full rounded-2xl border px-4 py-3 text-sm"
+    disabled={isIconUploading}
+    onChange={async (e) => {
+      const file = e.target.files?.[0];
+
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        alert("画像ファイルを選択してください。");
+        return;
+      }
+
+      try {
+        setIsIconUploading(true);
+
+        const imageUrl = await uploadImageToCloudinary(file);
+        setIconUrl(imageUrl);
+      } catch (error) {
+        console.error(error);
+        alert("アイコン画像のアップロードに失敗しました。");
+      } finally {
+        setIsIconUploading(false);
+      }
+    }}
+  />
+
+  {isIconUploading && (
+    <p className="mt-2 text-sm font-bold text-slate-600">
+      アップロード中...
+    </p>
+  )}
+
+  {iconUrl && (
+    <img
+      src={iconUrl}
+      alt="アイコンプレビュー"
+      className="mt-3 h-20 w-20 rounded-full border object-cover"
+    />
+  )}
+</div>
       </div>
 
       <div className="grid gap-5 md:grid-cols-2">
