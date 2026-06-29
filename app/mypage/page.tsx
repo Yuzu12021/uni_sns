@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import AuthGuard from "../../components/AuthGuard";
 import PostCard from "../../components/PostCard";
-import ProfileCard from "../../components/ProfileCard";
+import FullProfile from "../../components/FullProfile";
 import ProfileEditor from "../../components/ProfileEditor";
 import { useAuthUser } from "../../hooks/useAuthUser";
 import { getPostsByOwner } from "../../services/postService";
@@ -60,7 +60,7 @@ setChatRooms(chatData);
         <section className="mb-10 grid gap-6 lg:grid-cols-[380px_1fr]">
           <div>
             {profile ? (
-              <ProfileCard profile={profile} photoURL={photoURL} />
+              <FullProfile profile={profile} photoURL={photoURL} />
             ) : (
               <div className="rounded-3xl border bg-white p-6 text-slate-500">
                 プロフィールが未設定です。

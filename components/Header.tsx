@@ -18,9 +18,6 @@ export default function Header() {
       <Link href="/" className="text-sm font-bold text-slate-950 hover:underline">
         ホーム
       </Link>
-      <Link href="/profile" className="text-sm font-bold text-slate-950 hover:underline">
-        プロフィール
-      </Link>
       <Link href="/mypage" className="text-sm font-bold text-slate-950 hover:underline">
         マイページ
       </Link>
@@ -44,14 +41,6 @@ export default function Header() {
         onClick={() => setIsOpen(false)}
       >
         ホーム
-      </Link>
-
-      <Link
-        href="/profile"
-        className="rounded-xl bg-slate-100 px-4 py-3 font-bold text-slate-950"
-        onClick={() => setIsOpen(false)}
-      >
-        プロフィール
       </Link>
 
       <Link
