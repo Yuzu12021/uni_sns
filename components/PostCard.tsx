@@ -31,7 +31,7 @@ export default function PostCard({
 
   return (
     <article
-      className={`overflow-hidden rounded-3xl border bg-white text-slate-950 shadow-sm transition hover:-translate-y-1 hover:shadow-lg ${
+      className={`overflow-visible rounded-3xl border bg-white text-slate-950 shadow-sm transition hover:-translate-y-1 hover:shadow-lg ${
         isClosed ? "opacity-70 grayscale" : ""
       }`}
     >

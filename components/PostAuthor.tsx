@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getUserProfile } from "../services/userService";
 import { UserProfile } from "../types/user";
-import ProfileModal from "./ProfileModal";
+import ProfilePopover from "./ProfilePopover";
 
 type PostAuthorProps = {
   ownerId: string;
@@ -33,7 +33,7 @@ export default function PostAuthor({ ownerId, ownerEmail }: PostAuthorProps) {
   "https://placehold.jp/150x150.png";
 
   return (
-    <div className="relative">
+    <div className="relative inline-block">
       <button
   type="button"
   onMouseDown={(e) => {
@@ -59,7 +59,10 @@ export default function PostAuthor({ ownerId, ownerEmail }: PostAuthorProps) {
       </button>
 
       {isOpen && profile && (
-        <ProfileModal profile={profile} onClose={() => setIsOpen(false)} />
+        <ProfilePopover
+         profile={profile} 
+         onClose={() => setIsOpen(false)} 
+         />
       )}
     </div>
   );
