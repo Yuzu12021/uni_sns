@@ -3,16 +3,19 @@
 import { useEffect, useState } from "react";
 import { getUserProfile } from "../services/userService";
 import { UserProfile } from "../types/user";
-import ProfilePopover from "./ProfilePopover";
 
 type PostAuthorProps = {
   ownerId: string;
   ownerEmail: string;
+  onOpenProfile?: (profile: UserProfile) => void;
 };
 
-export default function PostAuthor({ ownerId, ownerEmail }: PostAuthorProps) {
+export default function PostAuthor({
+  ownerId,
+  ownerEmail,
+  onOpenProfile,
+}: PostAuthorProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -29,41 +32,34 @@ export default function PostAuthor({ ownerId, ownerEmail }: PostAuthorProps) {
     profile?.nickname || profile?.name || ownerEmail || "投稿者";
 
   const iconUrl =
-  profile?.iconUrl ||
-  "https://placehold.jp/150x150.png";
+    profile?.iconUrl || "https://placehold.jp/150x150.png";
 
   return (
-    <div className="relative inline-block">
-      <button
-  type="button"
-  onMouseDown={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }}
-  onClick={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsOpen(true);
-  }}
-  className="flex items-center gap-2 text-left"
->
-        <img
-          src={iconUrl}
-          alt="投稿者アイコン"
-          className="h-8 w-8 rounded-full border object-cover"
-        />
+    <button
+      type="button"
+      onMouseDown={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-        <span className="truncate text-xs font-bold text-slate-500">
-          {displayName}
-        </span>
-      </button>
+        if (profile && onOpenProfile) {
+          onOpenProfile(profile);
+        }
+      }}
+      className="flex items-center gap-2 text-left"
+    >
+      <img
+        src={iconUrl}
+        alt="投稿者アイコン"
+        className="h-8 w-8 rounded-full border object-cover"
+      />
 
-      {isOpen && profile && (
-        <ProfilePopover
-         profile={profile} 
-         onClose={() => setIsOpen(false)} 
-         />
-      )}
-    </div>
+      <span className="truncate text-xs font-bold text-slate-500">
+        {displayName}
+      </span>
+    </button>
   );
 }
