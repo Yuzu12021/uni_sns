@@ -13,6 +13,11 @@ const roleOptions = [
   "その他",
 ];
 
+const seminarOptions=[
+  "未設定",
+  "野上ゼミ"
+];
+
 type ProfileEditorProps = {
   onSaved?: () => void;
 };
@@ -32,6 +37,9 @@ export default function ProfileEditor({ onSaved }: ProfileEditorProps) {
   const [iconUrl, setIconUrl] = useState("");
   const [portfolioUrls, setPortfolioUrls] = useState(["", "", ""]);
 
+  const[seminar,setSeminar]=useState("");
+  const[shortBio,setShortBio]=useState("");
+
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -48,6 +56,8 @@ export default function ProfileEditor({ onSaved }: ProfileEditorProps) {
         setOtherRole(data.otherRole ?? "");
         setTools(data.tools ?? "");
         setBio(data.bio ?? "");
+        setSeminar(data.seminar ?? "");
+        setShortBio(data.shortBio ?? "");
         setIconUrl(data.iconUrl ?? photoURL ?? "");
         setPortfolioUrls(data.portfolioUrls ?? ["", "", ""]);
       } else {
@@ -84,6 +94,8 @@ export default function ProfileEditor({ onSaved }: ProfileEditorProps) {
       bio,
       iconUrl,
       portfolioUrls,
+      seminar,
+      shortBio,
     });
 
     setMessage("プロフィールを保存しました！");
@@ -154,6 +166,38 @@ export default function ProfileEditor({ onSaved }: ProfileEditorProps) {
             <option value="4年">4年</option>
           </select>
         </div>
+
+        <div>
+  <label className="mb-1 block text-sm font-bold">
+    所属ゼミ
+  </label>
+
+  <select
+    className="w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:border-slate-400"
+    value={seminar}
+    onChange={(e) => setSeminar(e.target.value)}
+  >
+    <option value="">選択してください</option>
+    {seminarOptions.map((option) => (
+      <option key={option} value={option}>
+        {option}
+      </option>
+    ))}
+  </select>
+</div>
+
+<div className="md:col-span-2">
+  <label className="mb-1 block text-sm font-bold">
+    一言
+  </label>
+
+  <input
+    className="w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:border-slate-400"
+    value={shortBio}
+    onChange={(e) => setShortBio(e.target.value)}
+    placeholder="例：3Dモデル制作が得意です！"
+  />
+</div>
 
         <div>
           <label className="mb-2 block text-sm font-bold">得意分野</label>

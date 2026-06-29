@@ -6,6 +6,8 @@ export type UserProfile = {
   nickname: string;
 
   grade: string;
+  seminar: string;
+  shortBio: string;
 
   roles: string[];
   otherRole: string;
