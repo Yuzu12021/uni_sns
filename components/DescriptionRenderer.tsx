@@ -26,12 +26,12 @@ export default function DescriptionRenderer({
             </a>
           ),
           img: ({ src, alt }) => (
-            <img
-              src={src || ""}
-              alt={alt || "投稿画像"}
-              className="my-4 max-h-96 w-full rounded-2xl border object-contain shadow-sm"
-            />
-          ),
+  <img
+    src={src || ""}
+    alt={alt || "投稿画像"}
+    className="my-4 max-h-[520px] max-w-full rounded-2xl border object-contain shadow-sm"
+  />
+),
         }}
       >
         {content}
