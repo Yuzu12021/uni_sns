@@ -30,17 +30,15 @@ export async function getPostsByOwner(ownerId: string) {
   })) as Post[];
 }
 
-export async function closePost(id: string, closeReason: "manual" | "deadline") {
+export async function closePost(
+  id: string,
+  closeReason: "manual" | "deadline"
+) {
   const postRef = doc(db, "posts", id);
-
-  const now = new Date();
-  const deleteDate = new Date(now);
-  deleteDate.setDate(deleteDate.getDate() + 7);
 
   await updateDoc(postRef, {
     status: "応募終了",
-    closedAt: Timestamp.fromDate(now),
-    deleteAt: Timestamp.fromDate(deleteDate),
+    closedAt: serverTimestamp(),
     closeReason,
     updatedAt: serverTimestamp(),
   });

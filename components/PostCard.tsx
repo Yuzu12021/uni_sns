@@ -6,6 +6,7 @@ import RoleBadge from "./RoleBadge";
 import PostAuthor from "./PostAuthor";
 import ProfilePopover from "./ProfilePopover";
 import { UserProfile } from "../types/user";
+import { isPostClosed } from "../utils/postStatus";
 
 type PostCardProps = {
   id: string;
@@ -14,7 +15,7 @@ type PostCardProps = {
   roles: string[];
   neededCount: string;
   deadline: string;
-  status: string;
+  status: "募集中" | "応募終了";
   ownerId: string;
   ownerEmail: string;
   applicationCount?: number;
@@ -32,7 +33,10 @@ export default function PostCard({
   ownerEmail,
   applicationCount = 0,
 }: PostCardProps) {
-  const isClosed = status === "応募終了";
+  const isClosed = isPostClosed({
+    status: status as "募集中" | "応募終了",
+    deadline
+  });
 
   const [selectedProfile, setSelectedProfile] =
   useState<UserProfile | null>(null);
@@ -49,7 +53,7 @@ export default function PostCard({
               isClosed ? "bg-red-600" : "bg-blue-600"
             }`}
           >
-            {status}
+            {isClosed ? "応募終了" : "募集中"}
           </span>
 
           {applicationCount > 0 && (

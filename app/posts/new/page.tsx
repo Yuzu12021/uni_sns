@@ -6,6 +6,8 @@ import AuthGuard from "../../../components/AuthGuard";
 import { useAuthUser } from "../../../hooks/useAuthUser";
 import { createPost } from "../../../services/postService";
 import RichTextEditor from "../../../components/RichTextEditor";
+import {parseTags} from "../../../utils/tagUtils";
+
 
 const roleOptions = [
   "プログラマ",
@@ -45,14 +47,13 @@ export default function NewPostPage() {
       setMessage("ログインしてください。");
       return;
     }
-
-  const imageCount =
-(description.match(/!\[/g) || []).length;
-
-if (imageCount > 2) {
-setMessage("画像は2枚までです。");
-return;
-}  
+    const imageCount =
+    (description.match(/!\[/g) || []).length;
+    
+    if (imageCount > 2) {
+      setMessage("画像は2枚までです。");
+      return;
+    }  
     if (!title || !description || !genre || roles.length === 0 || !neededCount) {
       setMessage("タイトル、内容、ジャンル、募集職種、募集人数は必須です。");
       return;
@@ -102,26 +103,38 @@ return;
           </div>
 
           <div>
-  <label className="mb-1 block text-sm font-bold text-slate-800">
-    制作内容
-  </label>
-
-  <RichTextEditor
-    value={description}
-    onChange={setDescription}
-  />
-</div>
+            <label className="mb-1 block text-sm font-bold text-slate-800">
+              制作内容
+            </label>
+            <RichTextEditor
+            value={description}
+            onChange={setDescription}/>
+          </div>
 
           <div>
             <label className="mb-1 block text-sm font-bold text-slate-800">
-              ジャンル
+              プロジェクトタグ
             </label>
             <input
               className="w-full rounded-2xl border px-4 py-3 text-slate-950 outline-none focus:border-slate-400"
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
-              placeholder="例：ホラー、アクション、RPG"
+              placeholder="例：ファンタジー, 癒し系, アクション"
             />
+            {parseTags(genre).length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {parseTags(genre).map((tag) => (
+                  <span
+                  key={tag}
+                  className="rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700">
+                    #{tag}
+                    </span>
+                ))}
+              </div>
+            )}
+            <p className="mt-2 text-xs text-slate-500">
+              「,」または「、」で区切って複数のタグを入力できます。
+            </p>
           </div>
 
           <div>
@@ -156,6 +169,20 @@ return;
               onChange={(e) => setTools(e.target.value)}
               placeholder="例：Unity, Blender, Aseprite"
             />
+            <p className="mt-2 text-xs text-slate-500">
+              「,」または「、」で区切って複数のツールを入力できます。
+            </p>
+              {parseTags(tools).length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {parseTags(tools).map((tag) => (
+                    <span
+                    key={tag}
+                    className="rounded-full bg-blue-50 px-3 py-1 text-sm font-bold text-blue-700">
+                      #{tag}
+                      </span>
+                    ))}
+                    </div>
+              )}
           </div>
 
           <div>

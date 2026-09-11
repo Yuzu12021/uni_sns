@@ -29,17 +29,7 @@ export default function PostList({
 
 const filteredPosts = posts
   .filter((post) => {
-    const now = new Date();
-
-    const isVisible =
-  !post.deleteAt ||
-  (
-    typeof post.deleteAt === "object" &&
-    post.deleteAt !== null &&
-    "toDate" in post.deleteAt &&
-    (post.deleteAt as any).toDate() > now
-  );
-
+    
     const keywordMatch =
       post.title.includes(keyword) ||
       post.genre.includes(keyword);
@@ -47,7 +37,7 @@ const filteredPosts = posts
     const roleMatch =
       !selectedRole || post.roles.includes(selectedRole);
 
-    return isVisible && keywordMatch && roleMatch;
+    return keywordMatch && roleMatch;
   })
   
   .sort((a, b) => {

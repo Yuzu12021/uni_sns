@@ -25,6 +25,5 @@ export type Post = {
   updatedAt?: unknown;
 
   closedAt?: unknown;
-  deleteAt?: unknown;
   closeReason?: "deadline" | "manual";
 };

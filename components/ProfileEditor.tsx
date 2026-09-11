@@ -193,18 +193,6 @@ export default function ProfileEditor({ onSaved }: ProfileEditorProps) {
   </select>
 </div>
 
-<div className="md:col-span-2">
-  <label className="mb-1 block text-sm font-bold">
-    一言
-  </label>
-
-  <input
-    className="w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:border-slate-400"
-    value={shortBio}
-    onChange={(e) => setShortBio(e.target.value)}
-    placeholder="例：3Dモデル制作が得意です！"
-  />
-</div>
 
         <div>
           <label className="mb-2 block text-sm font-bold">得意分野</label>
