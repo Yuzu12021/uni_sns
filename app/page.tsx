@@ -12,7 +12,7 @@ const [sortType, setSortType] = useState("new");
   return (
     <AuthGuard>
       <main className="bg-white text-slate-950">
-        <HeroSection />
+        {/* <HeroSection /> */}
 
         <div className="mx-auto mt-[10vh] max-w-7xl px-6">
           <SearchFilterSection
