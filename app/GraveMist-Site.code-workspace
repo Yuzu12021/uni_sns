@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../../../../../UnityProjects/GraveMist-Site"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../../../LuckLick/4thAnni"
+		},
+		{
+			"path": "../../../../../ポートフォリオサイト"
+		},
+		{
+			"path": "../../../../../LuckLick/sanwa-kouzai"
+		},
+		{
+			"path": "../../../../../../../Downloads/lucklick/lucklick"
+		}
+	],
+	"settings": {
+		"terminal.integrated.fontFamily": "",
+		"terminal.integrated.fontLigatures.enabled": false,
+		"liveServer.settings.multiRootWorkspaceName": "site"
+	}
+}

@@ -1,35 +1,41 @@
-"use client";
-import AuthGuard from "../components/AuthGuard";
-import HeroSection from "../components/HeroSection";
-import PostList from "../components/PostList";
-import SearchFilterSection from "../components/SearchFilterSection";
-import { useState } from "react";
 
-export default function Home() {
-  const [keyword, setKeyword] = useState("");
-const [selectedRole, setSelectedRole] = useState("");
-const [sortType, setSortType] = useState("new");
+"use client";
+
+import AuthGuard from "../components/AuthGuard";
+import PostList from "../components/PostList";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+
+function HomeContent() {
+  const searchParams = useSearchParams();
+
+  const keyword = searchParams.get("keyword") ?? "";
+  const selectedRole = searchParams.get("role") ?? "";
+  const sortType = searchParams.get("sort") ?? "new";
+
   return (
     <AuthGuard>
-      <main className="bg-white text-slate-950">
-        {/* <HeroSection /> */}
+      <main className="min-h-screen bg-white text-slate-950">
+        <div className="mx-auto max-w-7xl px-6 pb-28 pt-12">
+          <h1 className="mb-6 text-2xl font-bold">
+            メンバー募集
+          </h1>
 
-        <div className="mx-auto mt-[10vh] max-w-7xl px-6">
-          <SearchFilterSection
-  keyword={keyword}
-  setKeyword={setKeyword}
-  selectedRole={selectedRole}
-  setSelectedRole={setSelectedRole}
-  sortType={sortType}
-  setSortType={setSortType}
-/>
           <PostList
-  keyword={keyword}
-  selectedRole={selectedRole}
-  sortType={sortType}
-/>
+            keyword={keyword}
+            selectedRole={selectedRole}
+            sortType={sortType}
+          />
         </div>
       </main>
     </AuthGuard>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<main className="min-h-screen bg-white" />}>
+      <HomeContent />
+    </Suspense>
   );
 }
